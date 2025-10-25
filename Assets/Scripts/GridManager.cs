@@ -1,0 +1,49 @@
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+[RequireComponent(typeof(Grid))]
+[RequireComponent(typeof(Tilemap))]
+public class GridManager : MonoBehaviour
+{
+    Tilemap tilemap;
+    Grid grid;
+    [SerializeField] TileSet tileSet;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        tilemap = GetComponent<Tilemap>();
+        grid = GetComponent<Grid>();
+        grid.Init(8,10);
+        Set(1,1,1);
+        Set(1,2,2);
+        Set(2,1,2);
+        UpdateTileMap();
+    }
+
+    void UpdateTileMap()
+    {
+        for (int x =0; x < grid.lenght; x++)
+        {
+            for (int y = 0; y < grid.height; y++)
+            {
+                UpdateTile(x,y);
+            }
+        }
+    }
+    private void UpdateTile (int x, int y)
+    {
+        int tileId = grid.Get(x,y);
+        if (tileId == -1)
+        {
+            return;
+        }
+        tilemap.SetTile(new Vector3Int(x,y,0), tileSet.tiles[tileId]);
+    }
+    public void Set(int x, int y, int to)
+        {
+            grid.Set(x,y,to);
+            UpdateTile(x,y);
+        }
+
+}
